@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, {forwardRef, useImperativeHandle, useState} from "react";
 import styled from "styled-components";
 import TrailItem from "../../components/trail-item/TrailItem";
 import { activateNextItemOnList, activatePrevItemOnList, getArrowKeyPressed } from "../../services/input.service";
 
-function Trails({isComponentActive, goToTopContainer}) {
+const Trails = forwardRef((props, ref) => {
     const initialTrail = [
         {
             name: 'Sala de Estar',
@@ -23,32 +23,26 @@ function Trails({isComponentActive, goToTopContainer}) {
 
     const [trail, setTrail] = useState(initialTrail);
 
-    const handlerKeyPress = (event) => {
-        const direction = getArrowKeyPressed(event);
-        if (!isComponentActive) return;
-
-        switch (direction) {
-            case 'top':
-                goToTopContainer();
-                break;
-            case 'left':
-                setTrail(activatePrevItemOnList(trail));
-                break;
-            case 'right':
-                setTrail(activateNextItemOnList(trail));
-                break;
+    useImperativeHandle(ref, () => ({
+        handlerKeyPressed(direction) {
+            switch (direction) {
+                case 'top':
+                    // exti();
+                    break;
+                case 'left':
+                    setTrail(activatePrevItemOnList(trail));
+                    break;
+                case 'right':
+                    setTrail(activateNextItemOnList(trail));
+                    break;
+            }
         }
-
-        event.preventDefault();
-    };
+    }));
 
     return (
         <Wrapper>
             <Title>Big Brother Brasil</Title>
-            <Trail
-                onKeyDown={handlerKeyPress}
-                tabIndex="0"
-            >
+            <Trail>
                 {trail.map((item, index) =>
                     <Item key={index}>
                         {item.active ? 'ativo' : 'inativo'}
@@ -61,7 +55,7 @@ function Trails({isComponentActive, goToTopContainer}) {
             </Trail>
         </Wrapper>
     );
-}
+});
 
 const Wrapper = styled.div``;
 const Title = styled.div``;
