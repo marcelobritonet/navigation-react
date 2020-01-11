@@ -3,7 +3,7 @@ import styled from "styled-components";
 import TrailItem from "../../components/trail-item/TrailItem";
 import { activateNextItemOnList, activatePrevItemOnList, getArrowKeyPressed } from "../../services/input.service";
 
-const Trails = forwardRef(({ exit }, ref) => {
+const Trails = forwardRef(({ exit, active }, ref) => {
     const initialTrail = [
         {
             name: 'Sala de Estar',
@@ -37,6 +37,7 @@ const Trails = forwardRef(({ exit }, ref) => {
                 case 'right':
                     result = activateNextItemOnList(trail);
                     break;
+                default: break;
             }
 
             const [newLlist, endOfList] = result;
@@ -50,7 +51,7 @@ const Trails = forwardRef(({ exit }, ref) => {
     }));
 
     return (
-        <Wrapper>
+        <Wrapper active={ active }>
             <Title>Big Brother Brasil</Title>
             <Trail>
                 {trail.map((item, index) =>
@@ -67,7 +68,9 @@ const Trails = forwardRef(({ exit }, ref) => {
     );
 });
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  border: 1px solid ${props => props.active ? '#000' : 'transparent'}
+`;
 const Title = styled.div``;
 const Trail = styled.ul``;
 const Item = styled.li``;
