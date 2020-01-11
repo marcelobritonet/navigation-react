@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { forwardRef, useImperativeHandle, useState } from "react";
 import styled from "styled-components";
-import { getArrowKeyPressed, activatePrevItemOnList, activateNextItemOnList } from '../../services/input.service';
+import { activatePrevItemOnList, activateNextItemOnList } from '../../services/input.service';
 
-function Menu({goToRightContainer, isComponentActive}) {
+const Menu = forwardRef((props, ref) => {
     const initialMenu = [
         {
             label: 'Buscar'
@@ -25,41 +25,32 @@ function Menu({goToRightContainer, isComponentActive}) {
 
     const [menu, setMenu] = useState(initialMenu);
 
-    const handlerKeyPress = (event) => {
-        const direction = getArrowKeyPressed(event);
-        if (!isComponentActive) return;
-
-        switch (direction) {
-            case 'top':
-                setMenu(activatePrevItemOnList(menu));
-                break;
-            case 'bottom':
-                setMenu(activateNextItemOnList(menu));
-                break;
-            case 'right':
-                goToRightContainer();
-                break;
+    useImperativeHandle(ref, () => ({
+        handlerKeyPress(direction) {
+            switch (direction) {
+                case 'top':
+                    setMenu(activatePrevItemOnList(menu));
+                    break;
+                case 'bottom':
+                    setMenu(activateNextItemOnList(menu));
+                    break;
+                case 'right':
+                    // exit();
+            }
         }
+    }));
 
-        event.preventDefault();
-    };
-
-    return (
-        <Wrapper>
-            <List
-                onKeyDown={handlerKeyPress}
-                tabIndex="0"
-            >
-                {menu.map((item, index) =>
-                    <Itens key={index}>
-                        {item.active ? 'ativo' : 'inativo'}
-                        <Link href="#">{item.label}</Link>
-                    </Itens>
-                )}
-            </List>
-        </Wrapper>
-    );
-}
+    return <Wrapper>
+        <List>
+            {menu.map((item, index) =>
+                <Itens key={index}>
+                    {item.active ? 'ativo' : 'inativo'}
+                    <Link href="#">{item.label}</Link>
+                </Itens>
+            )}
+        </List>
+    </Wrapper>;
+});
 
 const Wrapper = styled.div``;
 const List = styled.ul``;

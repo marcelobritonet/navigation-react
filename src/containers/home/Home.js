@@ -1,51 +1,53 @@
-import React from "react";
+import React, {useRef} from "react";
+import { getArrowKeyPressed } from "../../services/input.service";
 import styled from "styled-components";
 import Highlights from "../highlights/Highlights";
 import Trails from "../trails/Trails";
 import Menu from "../menu/Menu";
 
 function Home() {
-    const components = {
-        highlights: {
-            active: true
+    // const highlightsRef = useRef();
+    const menuRef = useRef();
+    // const trailsRef = useRef();
+
+    const components = [
+        {
+            alias: 'highlights',
+            active: false
         },
-        menu: {
-            active: true
+        {
+            alias: 'menu',
+            active: true,
+            ref: menuRef
         },
-        trail: {
-            active: true
+        {
+            alias: 'trail',
+            active: false
         }
+    ];
+
+    const handlerKeyPress = (event) => {
+        const ref = components.find(component => component.active).ref;
+        const direction = getArrowKeyPressed(event);
+        ref.current.handlerKeyPress(direction);
+        event.preventDefault();
     };
 
-    const right = () => {
-        console.log('right');
-    };
-
-    const top = () => {
-        console.log('top');
-    };
-
-    const bottom = () => {
-        console.log('bottom');
-    };
-
-    return (
-        <HomeWrapper>
-            <Logo/>
-            <Highlights
-                goToBottomContainer={ bottom }
-                isComponentActive={ components.highlights.active }
-            />
-            <Menu
-                goToRightContainer={ right }
-                isComponentActive={ components.menu.active }
-            />
-            <Trails
-                goToTopContainer={ top }
-                isComponentActive={ components.trail.active }
-            />
-        </HomeWrapper>
-    );
+    return <HomeWrapper
+        onKeyDown={handlerKeyPress}
+        tabIndex="0"
+    >
+        <Logo/>
+        <Highlights
+            // ref={ highlightsRef }
+        />
+        <Menu
+            ref={menuRef}
+        />
+        <Trails
+            // ref={ trailsRef }
+        />
+    </HomeWrapper>;
 }
 
 const HomeWrapper = styled.div``;
