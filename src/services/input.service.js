@@ -4,31 +4,28 @@ const getArrowKeyPressed = (event) => {
         case 39: return 'right';
         case 38: return 'top';
         case 40: return 'bottom';
-        default: return event.keyCode;
     }
+
+    event.preventDefault();
 };
 
 const activatePrevItemOnList = (list) => {
     const indexActive = list.findIndex(item => item.active);
     const newIndexActive = indexActive - 1 >= 0 ? indexActive - 1 : 0;
-    const endOfList = indexActive - 1 < 0;
-    const updatedList = list.map((item, index) => ({
+    return list.map((item, index) => ({
         ...item,
         active: index === newIndexActive
     }));
-    return [updatedList, endOfList];
 };
 
 const activateNextItemOnList = (list) => {
     const indexActive = list.findIndex(item => item.active);
-    const listLenght = list.length;
-    const newIndexActive = indexActive + 1 === listLenght ? listLenght : indexActive + 1;
-    const endOfList = indexActive + 1 === listLenght;
-    const updatedList = list.map((item, index) => ({
+    const listLenght = list.length - 1;
+    const newIndexActive = indexActive + 1 >= listLenght ? listLenght : indexActive + 1;
+    return list.map((item, index) => ({
         ...item,
         active: index === newIndexActive
     }));
-    return [updatedList, endOfList];
 };
 
 // const goLeft = () => {
