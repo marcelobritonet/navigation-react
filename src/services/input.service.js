@@ -11,20 +11,24 @@ const getArrowKeyPressed = (event) => {
 const activatePrevItemOnList = (list) => {
     const indexActive = list.findIndex(item => item.active);
     const newIndexActive = indexActive - 1 >= 0 ? indexActive - 1 : 0;
-    return list.map((item, index) => ({
+    const endOfList = indexActive - 1 < 0;
+    const updatedList = list.map((item, index) => ({
         ...item,
         active: index === newIndexActive
     }));
+    return [updatedList, endOfList];
 };
 
 const activateNextItemOnList = (list) => {
     const indexActive = list.findIndex(item => item.active);
-    const listLenght = list.length - 1;
-    const newIndexActive = indexActive + 1 >= listLenght ? listLenght : indexActive + 1;
-    return list.map((item, index) => ({
+    const listLenght = list.length;
+    const newIndexActive = indexActive + 1 === listLenght ? listLenght : indexActive + 1;
+    const endOfList = indexActive + 1 === listLenght;
+    const updatedList = list.map((item, index) => ({
         ...item,
         active: index === newIndexActive
     }));
+    return [updatedList, endOfList];
 };
 
 // const goLeft = () => {
