@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState} from "react";
 import { getArrowKeyPressed } from "../../services/input.service";
 import styled from "styled-components";
 import Highlights from "../highlights/Highlights";
@@ -56,27 +56,45 @@ function Home() {
         }
     };
 
-    return <HomeWrapper
+    return <Wrapper
         onKeyDown={handlerKeyPress}
         tabIndex="0"
     >
-        <Logo/>
-        <Highlights
-            ref={ highlightsRef }
-            exit={ exit }
-        />
-        <Menu
-            ref={ menuRef }
-            exit={ exit }
-        />
-        <Trails
-            ref={ trailsRef }
-            exit={ exit }
-        />
-    </HomeWrapper>;
+        <Aside>
+            <Menu
+                ref={ menuRef }
+                exit={ exit }
+                active={ containers.find(container => container.active).alias === 'menu' }
+            />
+        </Aside>
+
+        <Main>
+            <Logo/>
+            <Highlights
+                ref={ highlightsRef }
+                exit={ exit }
+                active={ containers.find(container => container.active).alias === 'highlights' }
+            />
+
+            <Trails
+                ref={ trailsRef }
+                exit={ exit }
+                active={ containers.find(container => container.active).alias === 'trail' }
+            />
+        </Main>
+    </Wrapper>;
 }
 
-const HomeWrapper = styled.div``;
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const Aside = styled.aside`
+`;
+
+const Main = styled.main``;
+
 const Logo = styled.div``;
 
 export default Home;
