@@ -4,10 +4,8 @@ const getArrowKeyPressed = (event) => {
         case 39: return 'right';
         case 38: return 'top';
         case 40: return 'bottom';
+        default: return event.keyCode;
     }
-
-    event.preventDefault();
-    return event.keyCode;
 };
 
 const activatePrevItemOnList = (list) => {
