@@ -2,7 +2,7 @@ import React, { forwardRef, useImperativeHandle, useState } from "react";
 import styled from "styled-components";
 import { activatePrevItemOnList, activateNextItemOnList } from '../../services/input.service';
 
-const Menu = forwardRef((props, ref) => {
+const Menu = forwardRef(({ exit }, ref) => {
     const initialMenu = [
         {
             label: 'Buscar'
@@ -27,15 +27,26 @@ const Menu = forwardRef((props, ref) => {
 
     useImperativeHandle(ref, () => ({
         handlerKeyPressed(direction) {
+            let result = [];
+
             switch (direction) {
                 case 'top':
-                    setMenu(activatePrevItemOnList(menu));
+                    result = activatePrevItemOnList(menu);
                     break;
                 case 'bottom':
-                    setMenu(activateNextItemOnList(menu));
+                    result = activateNextItemOnList(menu);
                     break;
                 case 'right':
-                    // exit();
+                    exit('right');
+                    break;
+            }
+
+            const [newLlist, endOfList] = result;
+
+            if(endOfList) {
+                exit(direction);
+            } else if(newLlist) {
+                setMenu(newLlist);
             }
         }
     }));

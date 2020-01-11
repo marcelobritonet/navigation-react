@@ -2,7 +2,7 @@ import React, {forwardRef, useImperativeHandle, useState} from "react";
 import styled from "styled-components";
 import { activateNextItemOnList, activatePrevItemOnList, getArrowKeyPressed } from "../../services/input.service";
 
-const Highlights = forwardRef((props, ref) => {
+const Highlights = forwardRef(({ exit }, ref) => {
     const initialControls = [
         {
             label: 'Assista',
@@ -18,16 +18,26 @@ const Highlights = forwardRef((props, ref) => {
 
     useImperativeHandle(ref, () => ({
         handlerKeyPressed(direction) {
+            let result = [];
+
             switch (direction) {
                 case 'left':
-                    setControls(activatePrevItemOnList(controls));
+                    result = activatePrevItemOnList(controls);
                     break;
                 case 'right':
-                    setControls(activateNextItemOnList(controls));
+                    result = activateNextItemOnList(controls);
                     break;
                 case 'bottom':
-                    // exit();
+                    exit('bottom');
                     break;
+            }
+
+            const [newLlist, endOfList] = result;
+
+            if(endOfList) {
+                exit(direction);
+            } else if(newLlist) {
+                setControls(newLlist);
             }
         }
     }));

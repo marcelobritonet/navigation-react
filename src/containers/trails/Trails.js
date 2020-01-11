@@ -3,7 +3,7 @@ import styled from "styled-components";
 import TrailItem from "../../components/trail-item/TrailItem";
 import { activateNextItemOnList, activatePrevItemOnList, getArrowKeyPressed } from "../../services/input.service";
 
-const Trails = forwardRef((props, ref) => {
+const Trails = forwardRef(({ exit }, ref) => {
     const initialTrail = [
         {
             name: 'Sala de Estar',
@@ -25,16 +25,26 @@ const Trails = forwardRef((props, ref) => {
 
     useImperativeHandle(ref, () => ({
         handlerKeyPressed(direction) {
+            let result = [];
+
             switch (direction) {
                 case 'top':
-                    // exti();
+                    exit('top');
                     break;
                 case 'left':
-                    setTrail(activatePrevItemOnList(trail));
+                    result = activatePrevItemOnList(trail);
                     break;
                 case 'right':
-                    setTrail(activateNextItemOnList(trail));
+                    result = activateNextItemOnList(trail);
                     break;
+            }
+
+            const [newLlist, endOfList] = result;
+
+            if(endOfList) {
+                exit(direction);
+            } else if(newLlist) {
+                setTrail(newLlist);
             }
         }
     }));
