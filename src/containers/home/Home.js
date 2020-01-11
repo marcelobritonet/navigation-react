@@ -13,7 +13,7 @@ function Home() {
     const containers = [
         {
             alias: 'highlights',
-            active: true,
+            active: false,
             ref: highlightsRef,
             bottom: 'trail'
         },
@@ -25,7 +25,7 @@ function Home() {
         },
         {
             alias: 'trail',
-            active: false,
+            active: true,
             ref: trailsRef,
             top: 'highlights'
         }
@@ -50,7 +50,7 @@ function Home() {
             ref={menuRef}
         />
         <Trails
-            // ref={ trailsRef }
+            ref={ trailsRef }
         />
     </HomeWrapper>;
 }
