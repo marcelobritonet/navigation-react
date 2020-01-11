@@ -1,16 +1,59 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import { getArrowKeyPressed, activatePrevItemOnList, activateNextItemOnList } from '../../services/input.service';
 
-function Menu() {
-    const menu = ['Buscar', 'Início', 'Agora na Globo', 'Categorias', 'Minha Conta'];
-    // inserir imagens e ids no formato de objeto
+function Menu({goToRightContainer, isComponentActive}) {
+    const initialMenu = [
+        {
+            label: 'Buscar'
+        },
+        {
+            label: 'Início',
+            active: false
+        },
+        {
+            label: 'Agora na Globo'
+        },
+        {
+            label: 'Categorias'
+        },
+        {
+            label: 'Minha Conta',
+            active: true
+        }
+    ];
+
+    const [menu, setMenu] = useState(initialMenu);
+
+    const handlerKeyPress = (event) => {
+        const direction = getArrowKeyPressed(event);
+        if (!isComponentActive) return;
+
+        switch (direction) {
+            case 'top':
+                setMenu(activatePrevItemOnList(menu));
+                break;
+            case 'bottom':
+                setMenu(activateNextItemOnList(menu));
+                break;
+            case 'right':
+                goToRightContainer();
+                break;
+        }
+
+        event.preventDefault();
+    };
 
     return (
         <Wrapper>
-            <List>
-                { menu.map(item =>
-                    <Itens key={ item }>
-                        <Link href="#">{ item }</Link>
+            <List
+                onKeyDown={handlerKeyPress}
+                tabIndex="0"
+            >
+                {menu.map((item, index) =>
+                    <Itens key={index}>
+                        {item.active ? 'ativo' : 'inativo'}
+                        <Link href="#">{item.label}</Link>
                     </Itens>
                 )}
             </List>
