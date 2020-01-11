@@ -6,30 +6,35 @@ import Trails from "../trails/Trails";
 import Menu from "../menu/Menu";
 
 function Home() {
-    // const highlightsRef = useRef();
+    const highlightsRef = useRef();
     const menuRef = useRef();
-    // const trailsRef = useRef();
+    const trailsRef = useRef();
 
-    const components = [
+    const containers = [
         {
             alias: 'highlights',
-            active: false
+            active: true,
+            ref: highlightsRef,
+            bottom: 'trail'
         },
         {
             alias: 'menu',
-            active: true,
-            ref: menuRef
+            active: false,
+            ref: menuRef,
+            right: ['highlights', 'trail']
         },
         {
             alias: 'trail',
-            active: false
+            active: false,
+            ref: trailsRef,
+            top: 'highlights'
         }
     ];
 
     const handlerKeyPress = (event) => {
-        const ref = components.find(component => component.active).ref;
+        const ref = containers.find(component => component.active).ref;
         const direction = getArrowKeyPressed(event);
-        ref.current.handlerKeyPress(direction);
+        ref.current.handlerKeyPressed(direction);
         event.preventDefault();
     };
 
@@ -39,7 +44,7 @@ function Home() {
     >
         <Logo/>
         <Highlights
-            // ref={ highlightsRef }
+            ref={ highlightsRef }
         />
         <Menu
             ref={menuRef}

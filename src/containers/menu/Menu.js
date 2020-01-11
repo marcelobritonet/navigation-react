@@ -26,7 +26,7 @@ const Menu = forwardRef((props, ref) => {
     const [menu, setMenu] = useState(initialMenu);
 
     useImperativeHandle(ref, () => ({
-        handlerKeyPress(direction) {
+        handlerKeyPressed(direction) {
             switch (direction) {
                 case 'top':
                     setMenu(activatePrevItemOnList(menu));
