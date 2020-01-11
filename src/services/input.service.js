@@ -7,6 +7,7 @@ const getArrowKeyPressed = (event) => {
     }
 
     event.preventDefault();
+    return event.keyCode;
 };
 
 const activatePrevItemOnList = (list) => {
