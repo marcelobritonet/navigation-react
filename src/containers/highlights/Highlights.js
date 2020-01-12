@@ -1,6 +1,7 @@
 import React, {forwardRef, useImperativeHandle, useState} from "react";
 import styled from "styled-components";
-import { activateNextItemOnList, activatePrevItemOnList, getArrowKeyPressed } from "../../services/input.service";
+import { activateNextItemOnList, activatePrevItemOnList } from "../../services/input.service";
+import Logo from "../../components/logo/Logo";
 
 const Highlights = forwardRef(({ exit, active }, ref) => {
     const initialControls = [
@@ -43,26 +44,39 @@ const Highlights = forwardRef(({ exit, active }, ref) => {
         }
     }));
 
-    return <Wrapper active={ active }>
-        <Logo>BBB</Logo>
+    return <Wrapper >
+        <Logo/>
         <Subtitle>Acompanhe 24h ao vivo a casa mais vigiada do Brasil</Subtitle>
+
         <Controls>
             { controls.map((control, index) =>
                 <Control
                     key={index}
-                    disabled={ !control.active }
+                    active={ control.active }
                 >{ control.label }</Control>
             )}
         </Controls>
     </Wrapper>;
 });
 
-const Wrapper = styled.div`
-  border: 1px solid ${props => props.active ? '#000' : 'transparent'}
+const Wrapper = styled.div``;
+
+const Subtitle = styled.h2`
+  color: #fff;
 `;
-const Logo = styled.h1``;
-const Subtitle = styled.h2``;
+
 const Controls = styled.div``;
-const Control = styled.button``;
+const Control = styled.button`
+  font-size: 16px;
+  color: ${ props => props.active ? '#707070' : '#cacfcd' };
+  padding: 10px 30px;
+  background-color: ${ props => props.active ? '#fff' : 'transparent' };
+  border: 1px solid #cacfcd;
+  border-radius: 3px;
+  margin-right: 15px;
+  transition: all .3s ease;
+  transform: ${ props => props.active ? 'scale(1.05)' : 'scale(1)' };
+  font-weight: bold;
+`;
 
 export default Highlights;

@@ -70,13 +70,15 @@ function Home() {
 
         <Container>
             <Main>
-                <Logo/>
-
-                <Highlights
-                    ref={ highlightsRef }
-                    exit={ exit }
-                    active={ containers.find(container => container.active).alias === 'highlights' }
-                />
+                <HighlightsWrapper
+                    componentActive={ containers.find(container => container.active).alias }
+                >
+                    <Highlights
+                        ref={ highlightsRef }
+                        exit={ exit }
+                        active={ containers.find(container => container.active).alias === 'highlights' }
+                    />
+                </HighlightsWrapper>
 
                 <Trails
                     ref={ trailsRef }
@@ -114,6 +116,8 @@ const Main = styled.main`
   padding: 40px 0;
 `;
 
-const Logo = styled.div``;
+const HighlightsWrapper = styled.div`
+  display: ${ props => props.componentActive === 'trail' ? 'none' : 'block' };
+`;
 
 export default Home;
