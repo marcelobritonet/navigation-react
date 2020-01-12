@@ -10,7 +10,7 @@ function Home() {
     const menuRef = useRef();
     const trailsRef = useRef();
 
-    const initialContainers = [
+    const initialContainers = [ // TODO: USE CONSTRUTOR
         {
             alias: 'highlights',
             active: true,
@@ -23,8 +23,7 @@ function Home() {
             alias: 'menu',
             active: false,
             ref: menuRef,
-            // right: ['highlights', 'trail'],
-            right: 'highlights',
+            right: ['highlights', 'trail'],
             hide: false
         },
         {
@@ -49,14 +48,14 @@ function Home() {
     const exit = (direction, shouldHide) => {
         const containerActive = containers.find(container => container.active);
         const nextContainerAlias = getNextContainerAlias({ containerActive, direction });
-        const updatedContainerStatus = nextContainerAlias && getUpdatedContainers({ nextContainerAlias, containers, containerActive, shouldHide });
+        const updatedContainerStatus = nextContainerAlias && getUpdatedContainers({ nextContainerAlias, containerActive, shouldHide });
 
         if(nextContainerAlias) {
             setContainers(updatedContainerStatus);
         }
     };
 
-    const getUpdatedContainers = ({ nextContainerAlias, containers, containerActive, shouldHide }) => (
+    const getUpdatedContainers = ({ nextContainerAlias, containerActive, shouldHide }) => (
         nextContainerAlias && containers.map(container => ({
             ...container,
             hide: getVisibilityParameter({container, containerActive, shouldHide, nextContainerAlias}),
@@ -72,7 +71,15 @@ function Home() {
     };
 
     const getNextContainerAlias = ({ containerActive, direction }) => {
-        return containerActive[direction];
+        const nextDirection = containerActive[direction];
+
+        return (typeof nextDirection === 'string')
+            ? nextDirection
+            : (typeof nextDirection === 'object')
+                ? containers.find(container => {
+                    return !container.hide && nextDirection.indexOf(container.alias) > -1
+                }).alias
+                : '';
     };
 
     return <Wrapper

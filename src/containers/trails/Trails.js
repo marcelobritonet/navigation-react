@@ -67,8 +67,8 @@ const Trails = forwardRef(({ exit, active }, ref) => {
     return (
         <Wrapper active={ active }>
             <Top>
-                <Title active={ active }>Big Brother Brasil</Title>
-                <SubTitle active={ active }>{ trails.find(trail => trail.active).name }</SubTitle>
+                <Title active={ true }>Big Brother Brasil</Title>
+                <SubTitle active={ true }>{ trails.find(trail => trail.active).name }</SubTitle>
             </Top>
 
             <Bottom>
