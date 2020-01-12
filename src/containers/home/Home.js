@@ -68,20 +68,23 @@ function Home() {
             />
         </Aside>
 
-        <Main>
-            <Logo/>
-            <Highlights
-                ref={ highlightsRef }
-                exit={ exit }
-                active={ containers.find(container => container.active).alias === 'highlights' }
-            />
+        <Container>
+            <Main>
+                <Logo/>
 
-            <Trails
-                ref={ trailsRef }
-                exit={ exit }
-                active={ containers.find(container => container.active).alias === 'trail' }
-            />
-        </Main>
+                <Highlights
+                    ref={ highlightsRef }
+                    exit={ exit }
+                    active={ containers.find(container => container.active).alias === 'highlights' }
+                />
+
+                <Trails
+                    ref={ trailsRef }
+                    exit={ exit }
+                    active={ containers.find(container => container.active).alias === 'trail' }
+                />
+            </Main>
+        </Container>
     </Wrapper>;
 }
 
@@ -95,9 +98,21 @@ const Wrapper = styled.div`
 const Aside = styled.aside`
   position: fixed;
   height: 100%;
+  z-index: 1;
 `;
 
-const Main = styled.main``;
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  width: calc(100% - 80px);
+  position: relative;
+  left: 80px;
+`;
+
+const Main = styled.main`
+  width: 90%;
+  padding: 40px 0;
+`;
 
 const Logo = styled.div``;
 
