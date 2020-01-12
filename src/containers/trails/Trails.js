@@ -3,7 +3,7 @@ import styled from "styled-components";
 import TrailItem from "../../components/trail-item/TrailItem";
 import { activateNextItemOnList, activatePrevItemOnList } from "../../services/input.service";
 
-const Trails = forwardRef(({ exit, active }, ref) => {
+const Trails = forwardRef(({ exit, active, setMainBackground }, ref) => {
     const initialTrail = [
         {
             name: 'Sala de Estar',
@@ -35,6 +35,7 @@ const Trails = forwardRef(({ exit, active }, ref) => {
             switch (direction) {
                 case 'top':
                     exit('top');
+                    setMainBackground();
                     break;
                 case 'left':
                     result = activatePrevItemOnList(trails);
@@ -51,6 +52,7 @@ const Trails = forwardRef(({ exit, active }, ref) => {
                 exit(direction);
             } else if(newLlist) {
                 setTrail(newLlist);
+                setMainBackground(newLlist.find(item => item.active).cover);
                 switch (direction) {
                     case 'left':
                         setTrailPosition(trailPosition + 360);
@@ -61,6 +63,10 @@ const Trails = forwardRef(({ exit, active }, ref) => {
                 }
 
             }
+        },
+
+        init() {
+            setMainBackground(trails.find(item => item.active).cover);
         }
     }));
 

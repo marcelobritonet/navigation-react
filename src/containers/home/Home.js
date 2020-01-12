@@ -37,6 +37,7 @@ function Home() {
     ];
 
     const [containers, setContainers] = useState(initialContainers);
+    const [mainBackground, setMainBackground] = useState();
 
     const handlerKeyPress = (event) => {
         const ref = containers.find(component => component.active).ref;
@@ -48,19 +49,18 @@ function Home() {
     const exit = (direction, shouldHide) => {
         const containerActive = containers.find(container => container.active);
         const nextContainerAlias = getNextContainerAlias({ containerActive, direction });
-        const updatedContainerStatus = nextContainerAlias && getUpdatedContainers({ nextContainerAlias, containerActive, shouldHide });
-
-        if(nextContainerAlias) {
-            setContainers(updatedContainerStatus);
-        }
-    };
-
-    const getUpdatedContainers = ({ nextContainerAlias, containerActive, shouldHide }) => (
-        nextContainerAlias && containers.map(container => ({
+        const updatedContainerStatus = nextContainerAlias && containers.map(container => ({
             ...container,
             hide: getVisibilityParameter({container, containerActive, shouldHide, nextContainerAlias}),
             active: container.alias === nextContainerAlias
-        })));
+        }));
+
+        if(nextContainerAlias) {
+            setContainers(updatedContainerStatus);
+            const active = updatedContainerStatus.find(container => container.active);
+            active.ref.current.init && active.ref.current.init(direction);
+        }
+    };
 
     const getVisibilityParameter = ({container, containerActive, shouldHide, nextContainerAlias}) => {
         return (container.alias === containerActive.alias && typeof shouldHide !== 'undefined')
@@ -83,8 +83,9 @@ function Home() {
     };
 
     return <Wrapper
-        onKeyDown={handlerKeyPress}
+        onKeyDown={ handlerKeyPress }
         tabIndex="0"
+        cover={ mainBackground }
     >
         <Aside>
             <Menu
@@ -110,6 +111,7 @@ function Home() {
                     ref={ trailsRef }
                     exit={ exit }
                     active={ containers.find(container => container.active).alias === 'trail' }
+                    setMainBackground={ setMainBackground }
                 />
             </Main>
         </Container>
@@ -119,7 +121,7 @@ function Home() {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  background: #fff url(https://s2.glbimg.com/CC4G7Z6ghe8pwTv_p4Lyo4d5g2g=/i.s3.glbimg.com/v1/AUTH_c3c606ff68e7478091d1ca496f9c5625/internal_photos/bs/2019/q/j/DLfVsaS66iuFucjQm8fQ/bbb19-programa-web.jpg) top center no-repeat;
+  background: #fff url(${ props => props.cover ? props.cover : 'https://s2.glbimg.com/CC4G7Z6ghe8pwTv_p4Lyo4d5g2g=/i.s3.glbimg.com/v1/AUTH_c3c606ff68e7478091d1ca496f9c5625/internal_photos/bs/2019/q/j/DLfVsaS66iuFucjQm8fQ/bbb19-programa-web.jpg' }) top center no-repeat;
   background-size: cover;
   align-items: stretch;
   height: 100%;
