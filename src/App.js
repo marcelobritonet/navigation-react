@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from "styled-components";
 import Home from "./containers/home/Home";
+import GlobalStyle from './GlobalStyle'
 
 function App() {
   return <Wrapper>
+    <GlobalStyle/>
     <Home/>
   </Wrapper>;
 }
