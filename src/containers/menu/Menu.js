@@ -6,11 +6,11 @@ const Menu = forwardRef(({ exit, active }, ref) => {
     const initialMenu = [
         {
             label: 'Buscar',
-            icon: '../../assets/svgs/search-24px.svg'
+            icon: '../../assets/svgs/search-24px.svg',
+            active: true,
         },
         {
             label: 'Início',
-            active: true,
             icon: '../../assets/svgs/search-24px.svg'
         },
         {
@@ -56,16 +56,24 @@ const Menu = forwardRef(({ exit, active }, ref) => {
         }
     }));
 
-    return <Wrapper active={ active }>
+    return <Wrapper containerActive={ active }>
         <List>
             { menu.map((item, index) =>
                 <Itens
                     key={ index }
-                    icon={ item.icon }
-                    active={ item.active }
+                    itemActive={ item.active }
+                    containerActive={ active }
                 >
-                    <Link href="#"
-                          active={ item.active }
+                    <Icon
+                        src={ item.icon }
+                        itemActive={ item.active }
+                        containerActive={ active }
+                    />
+
+                    <Link
+                        href="#"
+                        itemActive={ item.active }
+                        containerActive={ active }
                     >{ item.label }</Link>
                 </Itens>
             )}
@@ -75,37 +83,45 @@ const Menu = forwardRef(({ exit, active }, ref) => {
 
 const Wrapper = styled.div`
   background-color: #000;
-  width: ${props => props.active ? '200px' : '100px'} ;
+  height: 100%;
+  width: ${props => props.containerActive ? '275px' : '80px'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all ease .3s;
 `;
 
 const List = styled.ul`
   margin: 0;
   padding: 0;
-  
+  overflow: hidden;
 `;
 
 const Itens = styled.li`
   list-style-type: none;
   margin: 0;
-  padding: 0 0 0 25px;
   position: relative;
-  background-color: ${ props => props.active ? '#fff' : 'transparent' };
-  
-  &:before {
-    background: blue url(${ props => props.icon }) center center no-repeat;
-    content: '';
-    display: block;
-    position: absolute;
-    height: 15px;
-    width: 15px;
-    left: 0;
-    top: 3px
-  }
+  background-color: ${ props => props.itemActive && props.containerActive  ? '#fff' : 'transparent' };
+  display: flex;
+  align-items: center;
+  padding: 15px 30px;
+  height: 30px;
+  width: calc(275px - 60px);
 `;
 
 const Link = styled.a`
-  color: ${ props => props.active ? '#333' : '#fff' };
+  color: ${ props => props.itemActive ? '#333' : '#fff' };
   text-decoration: none;
+  visibility: ${ props => props.containerActive ? 'visible' : 'hidden' };
+  opacity: ${ props => props.containerActive ? '1' : '0' };
+  transition: all ease .5s;
+`;
+
+const Icon = styled.img`
+  height: 15px;
+  width: 15px;
+  background-color: ${ props => props.itemActive ? props.containerActive ? '#000' : '#ccc' : '#333' };
+  margin-right: 25px;
 `;
 
 export default Menu;
