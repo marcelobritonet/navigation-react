@@ -95,6 +95,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   background: #fff url(https://s2.glbimg.com/CC4G7Z6ghe8pwTv_p4Lyo4d5g2g=/i.s3.glbimg.com/v1/AUTH_c3c606ff68e7478091d1ca496f9c5625/internal_photos/bs/2019/q/j/DLfVsaS66iuFucjQm8fQ/bbb19-programa-web.jpg) top center no-repeat;
   align-items: stretch;
+  height: 100%;
 `;
 
 const Aside = styled.aside`
@@ -109,15 +110,20 @@ const Container = styled.div`
   width: calc(100% - 80px);
   position: relative;
   left: 80px;
+  height: 100%;
+  z-index: 0;
 `;
 
 const Main = styled.main`
   width: 90%;
   padding: 40px 0;
+  display: flex;
+  flex-direction: column;
 `;
 
 const HighlightsWrapper = styled.div`
   display: ${ props => props.componentActive === 'trail' ? 'none' : 'block' };
+  margin-bottom: 50px;
 `;
 
 export default Home;
