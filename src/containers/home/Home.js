@@ -16,21 +16,24 @@ function Home() {
             active: true,
             ref: highlightsRef,
             bottom: 'trail',
-            left: 'menu'
+            left: 'menu',
+            hide: false
         },
         {
             alias: 'menu',
             active: false,
             ref: menuRef,
-            // right: ['highlights', 'trail']
-            right: 'highlights'
+            // right: ['highlights', 'trail'],
+            right: 'highlights',
+            hide: false
         },
         {
             alias: 'trail',
             active: false,
             ref: trailsRef,
             top: 'highlights',
-            left: 'menu'
+            left: 'menu',
+            hide: false
         }
     ];
 
@@ -43,17 +46,33 @@ function Home() {
         event.preventDefault();
     };
 
-    const exit = (direction) => {
-        const actualContainer = containers.find(container => container.active);
-        const nextContainer = actualContainer[direction];
-        const updatedContainerStatus = nextContainer && containers.map(container => ({
-            ...container,
-            active: container.alias === nextContainer
-        }));
+    const exit = (direction, shouldHide) => {
+        const containerActive = containers.find(container => container.active);
+        const nextContainerAlias = getNextContainerAlias({ containerActive, direction });
+        const updatedContainerStatus = nextContainerAlias && getUpdatedContainers({ nextContainerAlias, containers, containerActive, shouldHide });
 
-        if(nextContainer) {
+        if(nextContainerAlias) {
             setContainers(updatedContainerStatus);
         }
+    };
+
+    const getUpdatedContainers = ({ nextContainerAlias, containers, containerActive, shouldHide }) => (
+        nextContainerAlias && containers.map(container => ({
+            ...container,
+            hide: getVisibilityParameter({container, containerActive, shouldHide, nextContainerAlias}),
+            active: container.alias === nextContainerAlias
+        })));
+
+    const getVisibilityParameter = ({container, containerActive, shouldHide, nextContainerAlias}) => {
+        return (container.alias === containerActive.alias && typeof shouldHide !== 'undefined')
+            ? shouldHide
+            : (container.alias === nextContainerAlias)
+                ? false
+                : container.hide;
+    };
+
+    const getNextContainerAlias = ({ containerActive, direction }) => {
+        return containerActive[direction];
     };
 
     return <Wrapper
@@ -71,7 +90,7 @@ function Home() {
         <Container>
             <Main>
                 <HighlightsWrapper
-                    componentActive={ containers.find(container => container.active).alias }
+                    hide={ containers.find(container => container.alias === 'highlights').hide }
                 >
                     <Highlights
                         ref={ highlightsRef }
@@ -123,8 +142,13 @@ const Main = styled.main`
 `;
 
 const HighlightsWrapper = styled.div`
-  display: ${ props => props.componentActive === 'trail' ? 'none' : 'block' };
-  margin-bottom: 50px;
+  display: ${ props => props.hide ? 'none' : 'block' };
+  margin-bottom: 50px;  
 `;
 
+// &:after {
+//     content: '';
+//     display: block;
+//     padding-bottom: 100%;
+// }
 export default Home;

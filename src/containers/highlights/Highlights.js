@@ -29,7 +29,7 @@ const Highlights = forwardRef(({ exit, active }, ref) => {
                     result = activateNextItemOnList(controls);
                     break;
                 case 'bottom':
-                    exit('bottom');
+                    exit('bottom', true);
                     break;
                 default: break;
             }
@@ -66,6 +66,7 @@ const Subtitle = styled.h2`
 `;
 
 const Controls = styled.div``;
+
 const Control = styled.button`
   font-size: 16px;
   color: ${ props => props.active ? '#707070' : '#cacfcd' };
