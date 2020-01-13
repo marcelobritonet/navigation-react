@@ -86,7 +86,7 @@ const Trails = forwardRef(({ exit, active, setMainBackground }, ref) => {
 
             <Bottom>
                 <TrailTitle>Agora no BBB</TrailTitle>
-                <Frame/>
+                <Frame active={ active }/>
 
                 <Trail position={ trailPosition }>
                     { trails.map((item, index) =>
@@ -145,12 +145,12 @@ const Trail = styled.ul`
 `;
 
 const Frame = styled.div`
-  border: 3px solid #fff;
+  border: 3px solid ${ props => props.active ? '#fff' : 'transparent' };
   width: 334px;
   height: 194px;
   position: absolute;
   z-index: 1;
-  background: url(https://maquinadeaprovacao.com.br/wp-content/uploads/2018/09/play-icon-300x300.png) center center no-repeat;
+  background: url(${ props => props.active ? 'https://maquinadeaprovacao.com.br/wp-content/uploads/2018/09/play-icon-300x300.png' : 'none' }) center center no-repeat;
   background-size: 50px;
 `;
 
