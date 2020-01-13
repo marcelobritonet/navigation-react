@@ -3,16 +3,18 @@ import styled from "styled-components";
 import { activateNextItemOnList, activatePrevItemOnList } from "../../services/input.service";
 import Logo from "../../components/Logo/Logo";
 import Icon from "../../components/Icon/Icon";
+import { HighlightFactory as HighlightInitial } from '../../factory/factory';
 
 const Highlights = forwardRef(({ exit, active }, ref) => {
     const initialControls = [
-        {
+        new HighlightInitial({
             label: 'Assista',
             icon: 'play',
             active: true
-        }, {
+        }),
+        new HighlightInitial({
             label: 'Veja mais'
-        }
+        })
     ];
 
     const [controls, setControls] = useState(initialControls);

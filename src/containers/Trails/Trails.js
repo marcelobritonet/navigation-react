@@ -2,27 +2,31 @@ import React, {forwardRef, useImperativeHandle, useState} from "react";
 import styled from "styled-components";
 import TrailItem from "../../components/TrailItem/TrailItem";
 import { activateNextItemOnList, activatePrevItemOnList } from "../../services/input.service";
+import { TrailsFactory as TrailsInitial } from '../../factory/factory';
 
 const Trails = forwardRef(({ exit, active, setMainBackground }, ref) => {
     const initialTrail = [
-        {
+        new TrailsInitial({
             name: 'Sala de Estar',
             cover: 'https://revistanews.com.br/wp-content/uploads/2018/01/sofa-bbb.jpg',
             active: true
-        },
-        {
+        }),
+        new TrailsInitial({
             name: 'Varanda',
             cover: 'http://g1.globo.com/BBB10/Fotos/foto/0,,34639160-EXH,00.jpg'
-        }, {
+        }),
+        new TrailsInitial({
             name: 'Piscina',
             cover: 'http://g1.globo.com/BBB10/Fotos/foto/0,,34639207-EXH,00.jpg'
-        }, {
+        }),
+        new TrailsInitial({
             name: 'Academia',
             cover: 'http://g1.globo.com/BBB10/Fotos/foto/0,,34639283-EXH,00.jpg'
-        }, {
+        }),
+        new TrailsInitial({
             name: 'Chuveiro',
             cover: 'https://cdn-ofuxico.akamaized.net/img/upload/noticias/2015/02/25/231235_36.jpg'
-        }
+        })
     ];
 
     const [trails, setTrail] = useState(initialTrail);
@@ -72,6 +76,7 @@ const Trails = forwardRef(({ exit, active, setMainBackground }, ref) => {
                 case 'right':
                     setTrailPosition(trailPosition - 360);
                     break;
+                default: break;
             }
 
         }

@@ -4,41 +4,42 @@ import styled from "styled-components";
 import Highlights from "../Highlights/Highlights";
 import Trails from "../Trails/Trails";
 import Menu from "../Menu/Menu";
+import { ContainerFactory as ContainerInitial } from "../../factory/factory";
 
 function Home() {
     const highlightsRef = useRef();
     const menuRef = useRef();
     const trailsRef = useRef();
+    const wrapperRef = useRef();
 
-    const initialContainers = [ // TODO: USE CONSTRUTOR
-        {
+    const initialContainers = [
+        new ContainerInitial({
             alias: 'highlights',
             active: true,
             ref: highlightsRef,
             bottom: 'trail',
-            left: 'menu',
-            hide: false
-        },
-        {
+            left: 'menu'
+        }),
+        new ContainerInitial({
             alias: 'menu',
-            active: false,
             ref: menuRef,
-            right: ['highlights', 'trail'],
-            hide: false
-        },
-        {
+            right: ['highlights', 'trail']
+        }),
+        new ContainerInitial({
             alias: 'trail',
-            active: false,
             ref: trailsRef,
             top: 'highlights',
-            left: 'menu',
-            hide: false
-        }
+            left: 'menu'
+        })
     ];
 
     const [containers, setContainers] = useState(initialContainers);
     const [containerActive, setcontainerActive] = useState(initialContainers.find(container => container.active));
     const [mainBackground, setMainBackground] = useState();
+
+    useEffect(() => {
+        wrapperRef.current.focus();
+    }, []);
 
     useEffect(() => {
         setcontainerActive(containers.find(container => container.active));
@@ -89,6 +90,7 @@ function Home() {
         onKeyDown={ handlerKeyPress }
         tabIndex="0"
         cover={ mainBackground }
+        ref={ wrapperRef }
     >
         <Aside>
             <Menu
@@ -98,24 +100,22 @@ function Home() {
             />
         </Aside>
 
-        <Container>
-            <Main
-                hideHighlights={ containers.find(container => container.alias === 'highlights').hide }
-            >
-                <Highlights
-                    ref={ highlightsRef }
-                    exit={ exit }
-                    active={ containerActive.alias === 'highlights' }
-                />
+        <Main
+            hideHighlights={ containers.find(container => container.alias === 'highlights').hide }
+        >
+            <Highlights
+                ref={ highlightsRef }
+                exit={ exit }
+                active={ containerActive.alias === 'highlights' }
+            />
 
-                <Trails
-                    ref={ trailsRef }
-                    exit={ exit }
-                    active={ containerActive.alias === 'trail' }
-                    setMainBackground={ setMainBackground }
-                />
-            </Main>
-        </Container>
+            <Trails
+                ref={ trailsRef }
+                exit={ exit }
+                active={ containerActive.alias === 'trail' }
+                setMainBackground={ setMainBackground }
+            />
+        </Main>
     </Wrapper>;
 }
 
@@ -134,14 +134,13 @@ const Aside = styled.aside`
   z-index: 1;
 `;
 
-const Container = styled.div`
+
+
+const Main = styled.main`
   position: relative;
   left: 80px;
   height: 100%;
   z-index: 0;
-`;
-
-const Main = styled.main`
   padding: 40px 0;
   display: flex;
   flex-direction: column;
