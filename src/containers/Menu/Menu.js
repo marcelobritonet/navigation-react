@@ -30,31 +30,37 @@ const Menu = forwardRef(({ exit, active }, ref) => {
     const [menu, setMenu] = useState(initialMenu);
 
     useImperativeHandle(ref, () => ({
-        handlerKeyPressed(direction) {
-            let result = [];
-
-            switch (direction) {
-                case 'top':
-                    result = activatePrevItemOnList(menu);
-                    break;
-                case 'bottom':
-                    result = activateNextItemOnList(menu);
-                    break;
-                case 'right':
-                    exit('right');
-                    break;
-                default: break;
-            }
-
-            const [newLlist, endOfList] = result;
-
-            if(endOfList) {
-                exit(direction);
-            } else if(newLlist) {
-                setMenu(newLlist);
-            }
-        }
+        handlerKeyPressed
     }));
+
+    const handlerKeyPressed = (direction) => {
+        let result = [];
+
+        switch (direction) {
+            case 'top':
+                result = activatePrevItemOnList(menu);
+                break;
+            case 'bottom':
+                result = activateNextItemOnList(menu);
+                break;
+            case 'right':
+                exit('right');
+                break;
+            default: break;
+        }
+
+        commitChanges({ result, direction });
+    };
+
+    const commitChanges = ({ result, direction }) => {
+        const [newLlist, endOfList] = result;
+
+        if(endOfList) {
+            exit(direction);
+        } else if(newLlist) {
+            setMenu(newLlist);
+        }
+    };
 
     return <Wrapper containerActive={ active }>
         <List>

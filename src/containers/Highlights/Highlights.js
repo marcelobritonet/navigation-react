@@ -1,7 +1,7 @@
 import React, {forwardRef, useImperativeHandle, useState} from "react";
 import styled from "styled-components";
 import { activateNextItemOnList, activatePrevItemOnList } from "../../services/input.service";
-import Logo from "../../components/logo/Logo";
+import Logo from "../../components/Logo/Logo";
 
 const Highlights = forwardRef(({ exit, active }, ref) => {
     const initialControls = [
@@ -18,31 +18,37 @@ const Highlights = forwardRef(({ exit, active }, ref) => {
     const [controls, setControls] = useState(initialControls);
 
     useImperativeHandle(ref, () => ({
-        handlerKeyPressed(direction) {
-            let result = [];
-
-            switch (direction) {
-                case 'left':
-                    result = activatePrevItemOnList(controls);
-                    break;
-                case 'right':
-                    result = activateNextItemOnList(controls);
-                    break;
-                case 'bottom':
-                    exit('bottom', true);
-                    break;
-                default: break;
-            }
-
-            const [newLlist, endOfList] = result;
-
-            if(endOfList) {
-                exit(direction);
-            } else if(newLlist) {
-                setControls(newLlist);
-            }
-        }
+        handlerKeyPressed
     }));
+
+    const handlerKeyPressed = (direction) => {
+        let result = [];
+
+        switch (direction) {
+            case 'left':
+                result = activatePrevItemOnList(controls);
+                break;
+            case 'right':
+                result = activateNextItemOnList(controls);
+                break;
+            case 'bottom':
+                exit('bottom', true);
+                break;
+            default: break;
+        }
+
+        commitChanges({ result, direction });
+    };
+
+    const commitChanges = ({ result, direction }) => {
+        const [newLlist, endOfList] = result;
+
+        if(endOfList) {
+            exit(direction);
+        } else if(newLlist) {
+            setControls(newLlist);
+        }
+    };
 
     return <Wrapper >
         <Logo/>
@@ -53,6 +59,7 @@ const Highlights = forwardRef(({ exit, active }, ref) => {
                 <Control
                     key={index}
                     active={ control.active }
+                    componentActive={ active }
                 >{ control.label }</Control>
             )}
         </Controls>
@@ -69,14 +76,14 @@ const Controls = styled.div``;
 
 const Control = styled.button`
   font-size: 16px;
-  color: ${ props => props.active ? '#707070' : '#cacfcd' };
+  color: ${ props => props.active && props.componentActive ? '#707070' : '#cacfcd' };
   padding: 10px 30px;
-  background-color: ${ props => props.active ? '#fff' : 'transparent' };
+  background-color: ${ props => props.active && props.componentActive ? '#fff' : 'transparent' };
   border: 1px solid #cacfcd;
   border-radius: 3px;
   margin-right: 15px;
   transition: all .3s ease;
-  transform: ${ props => props.active ? 'scale(1.05)' : 'scale(1)' };
+  transform: ${ props => props.active && props.componentActive ? 'scale(1.05)' : 'scale(1)' };
   font-weight: bold;
 `;
 

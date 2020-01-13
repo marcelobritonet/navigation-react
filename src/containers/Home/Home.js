@@ -1,9 +1,9 @@
-import React, { useRef, useState} from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { getArrowKeyPressed } from "../../services/input.service";
 import styled from "styled-components";
-import Highlights from "../highlights/Highlights";
-import Trails from "../trails/Trails";
-import Menu from "../menu/Menu";
+import Highlights from "../Highlights/Highlights";
+import Trails from "../Trails/Trails";
+import Menu from "../Menu/Menu";
 
 function Home() {
     const highlightsRef = useRef();
@@ -37,21 +37,24 @@ function Home() {
     ];
 
     const [containers, setContainers] = useState(initialContainers);
+    const [containerActive, setcontainerActive] = useState(initialContainers.find(container => container.active));
     const [mainBackground, setMainBackground] = useState();
 
+    useEffect(() => {
+        setcontainerActive(containers.find(container => container.active));
+    }, [containers]);
+
     const handlerKeyPress = (event) => {
-        const ref = containers.find(component => component.active).ref;
         const direction = getArrowKeyPressed(event);
-        ref.current.handlerKeyPressed(direction);
+        containerActive.ref.current.handlerKeyPressed(direction);
         event.preventDefault();
     };
 
     const exit = (direction, shouldHide) => {
-        const containerActive = containers.find(container => container.active);
-        const nextContainerAlias = getNextContainerAlias({ containerActive, direction });
+        const nextContainerAlias = getNextContainerAlias({ direction });
         const updatedContainerStatus = nextContainerAlias && containers.map(container => ({
             ...container,
-            hide: getVisibilityParameter({container, containerActive, shouldHide, nextContainerAlias}),
+            hide: getHideProperty({container, shouldHide, nextContainerAlias}),
             active: container.alias === nextContainerAlias
         }));
 
@@ -62,7 +65,7 @@ function Home() {
         }
     };
 
-    const getVisibilityParameter = ({container, containerActive, shouldHide, nextContainerAlias}) => {
+    const getHideProperty = ({container, shouldHide, nextContainerAlias}) => {
         return (container.alias === containerActive.alias && typeof shouldHide !== 'undefined')
             ? shouldHide
             : (container.alias === nextContainerAlias)
@@ -70,15 +73,15 @@ function Home() {
                 : container.hide;
     };
 
-    const getNextContainerAlias = ({ containerActive, direction }) => {
+    const getNextContainerAlias = ({ direction }) => {
         const nextDirection = containerActive[direction];
 
         return (typeof nextDirection === 'string')
             ? nextDirection
             : (typeof nextDirection === 'object')
-                ? containers.find(container => {
-                    return !container.hide && nextDirection.indexOf(container.alias) > -1
-                }).alias
+                ? containers.find(container =>
+                    !container.hide && nextDirection.indexOf(container.alias) > -1
+                ).alias
                 : '';
     };
 
@@ -91,26 +94,26 @@ function Home() {
             <Menu
                 ref={ menuRef }
                 exit={ exit }
-                active={ containers.find(container => container.active).alias === 'menu' }
+                active={ containerActive.alias === 'menu' }
             />
         </Aside>
 
         <Container>
-            <Main>
-                <HighlightsWrapper
-                    hide={ containers.find(container => container.alias === 'highlights').hide }
-                >
+            <Main
+                hideHighlights={ containers.find(container => container.alias === 'highlights').hide }
+            >
+                <HighlightsWrapper>
                     <Highlights
                         ref={ highlightsRef }
                         exit={ exit }
-                        active={ containers.find(container => container.active).alias === 'highlights' }
+                        active={ containerActive.alias === 'highlights' }
                     />
                 </HighlightsWrapper>
 
                 <Trails
                     ref={ trailsRef }
                     exit={ exit }
-                    active={ containers.find(container => container.active).alias === 'trail' }
+                    active={ containerActive.alias === 'trail' }
                     setMainBackground={ setMainBackground }
                 />
             </Main>
@@ -121,7 +124,7 @@ function Home() {
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  background: #fff url(${ props => props.cover ? props.cover : 'https://s2.glbimg.com/CC4G7Z6ghe8pwTv_p4Lyo4d5g2g=/i.s3.glbimg.com/v1/AUTH_c3c606ff68e7478091d1ca496f9c5625/internal_photos/bs/2019/q/j/DLfVsaS66iuFucjQm8fQ/bbb19-programa-web.jpg' }) top center no-repeat;
+  background: #fff url(${ props => props.cover ? props.cover : 'https://s2.glbimg.com/CC4G7Z6ghe8pwTv_p4Lyo4d5g2g=/i.s3.glbimg.com/v1/AUTH_c3c606ff68e7478091d1ca496f9c5625/internal_photos/bs/2019/q/j/DLfVsaS66iuFucjQm8fQ/bbb19-programa-web.jpg' }) center center no-repeat;
   background-size: cover;
   align-items: stretch;
   height: 100%;
@@ -148,16 +151,12 @@ const Main = styled.main`
   padding: 40px 0;
   display: flex;
   flex-direction: column;
+  transform: translateY(${ props => props.hideHighlights ? '-300px' : '0' });
+  transition: transform .3s ease;
 `;
 
 const HighlightsWrapper = styled.div`
-  display: ${ props => props.hide ? 'none' : 'block' };
   margin-bottom: 50px;  
 `;
 
-// &:after {
-//     content: '';
-//     display: block;
-//     padding-bottom: 100%;
-// }
 export default Home;

@@ -1,11 +1,13 @@
 import React from 'react';
 import styled from "styled-components";
-import Home from "./containers/home/Home";
-import GlobalStyle from './GlobalStyle'
+import Home from "./containers/Home/Home";
+import GlobalStyle from './GlobalStyle';
+import Svgs from './components/Svg/Svg';
 
 function App() {
   return <Wrapper>
     <GlobalStyle/>
+    <Svgs />
     <Home/>
   </Wrapper>;
 }

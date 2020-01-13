@@ -1,6 +1,6 @@
 import React, {forwardRef, useImperativeHandle, useState} from "react";
 import styled from "styled-components";
-import TrailItem from "../../components/trail-item/TrailItem";
+import TrailItem from "../../components/TrailItem/TrailItem";
 import { activateNextItemOnList, activatePrevItemOnList } from "../../services/input.service";
 
 const Trails = forwardRef(({ exit, active, setMainBackground }, ref) => {
@@ -29,46 +29,53 @@ const Trails = forwardRef(({ exit, active, setMainBackground }, ref) => {
     const [trailPosition, setTrailPosition] = useState(0);
 
     useImperativeHandle(ref, () => ({
-        handlerKeyPressed(direction) {
-            let result = [];
+        handlerKeyPressed,
+        init
+    }));
 
+    const handlerKeyPressed = (direction) => {
+        let changes = [];
+
+        switch (direction) {
+            case 'top':
+                exit('top');
+                setMainBackground();
+                break;
+            case 'left':
+                changes = activatePrevItemOnList(trails);
+                break;
+            case 'right':
+                changes = activateNextItemOnList(trails);
+                break;
+            default: break;
+        }
+
+        commitChanges({ direction, changes });
+    };
+
+    const init = () => {
+        setMainBackground(trails.find(item => item.active).cover);
+    };
+
+    const commitChanges = ({ direction, changes }) => {
+        const [newLlist, endOfList] = changes;
+
+        if(endOfList) {
+            exit(direction);
+        } else if(newLlist) {
+            setTrail(newLlist);
+            setMainBackground(newLlist.find(item => item.active).cover);
             switch (direction) {
-                case 'top':
-                    exit('top');
-                    setMainBackground();
-                    break;
                 case 'left':
-                    result = activatePrevItemOnList(trails);
+                    setTrailPosition(trailPosition + 360);
                     break;
                 case 'right':
-                    result = activateNextItemOnList(trails);
+                    setTrailPosition(trailPosition - 360);
                     break;
-                default: break;
             }
 
-            const [newLlist, endOfList] = result;
-
-            if(endOfList) {
-                exit(direction);
-            } else if(newLlist) {
-                setTrail(newLlist);
-                setMainBackground(newLlist.find(item => item.active).cover);
-                switch (direction) {
-                    case 'left':
-                        setTrailPosition(trailPosition + 360);
-                        break;
-                    case 'right':
-                        setTrailPosition(trailPosition - 360);
-                        break;
-                }
-
-            }
-        },
-
-        init() {
-            setMainBackground(trails.find(item => item.active).cover);
         }
-    }));
+    };
 
     return (
         <Wrapper active={ active }>
