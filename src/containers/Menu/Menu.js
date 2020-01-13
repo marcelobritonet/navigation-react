@@ -1,29 +1,30 @@
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import styled from "styled-components";
 import { activatePrevItemOnList, activateNextItemOnList } from '../../services/input.service';
+import Icon from '../../components/Icon/Icon';
 
 const Menu = forwardRef(({ exit, active }, ref) => {
     const initialMenu = [
         {
             label: 'Buscar',
-            icon: '../../assets/svgs/search-24px.svg',
+            icon: 'menu-search',
             active: true,
         },
         {
             label: 'Início',
-            icon: '../../assets/svgs/search-24px.svg'
+            icon: 'menu-home'
         },
         {
             label: 'Agora na Globo',
-            icon: '../../assets/svgs/search-24px.svg'
+            icon: 'menu-stream'
         },
         {
             label: 'Categorias',
-            icon: '../../assets/svgs/search-24px.svg'
+            icon: 'menu-categories'
         },
         {
             label: 'Minha Conta',
-            icon: '../../assets/svgs/search-24px.svg'
+            icon: 'menu-user'
         }
     ];
 
@@ -70,8 +71,8 @@ const Menu = forwardRef(({ exit, active }, ref) => {
                     itemActive={ item.active }
                     containerActive={ active }
                 >
-                    <Icon
-                        src={ item.icon }
+                    <MenuIcon
+                        name={ item.icon }
                         itemActive={ item.active }
                         containerActive={ active }
                     />
@@ -123,11 +124,12 @@ const Link = styled.a`
   transition: all ease .5s;
 `;
 
-const Icon = styled.img`
+const MenuIcon = styled(Icon)`
+  fill: ${ props => props.itemActive ? props.containerActive ? '#000' : '#ccc' : '#333' };
   height: 15px;
-  width: 15px;
-  background-color: ${ props => props.itemActive ? props.containerActive ? '#000' : '#ccc' : '#333' };
   margin-right: 25px;
+  width: 15px;
+  transition: fill .2s linear;
 `;
 
 export default Menu;

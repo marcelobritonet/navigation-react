@@ -2,16 +2,16 @@ import React, {forwardRef, useImperativeHandle, useState} from "react";
 import styled from "styled-components";
 import { activateNextItemOnList, activatePrevItemOnList } from "../../services/input.service";
 import Logo from "../../components/Logo/Logo";
+import Icon from "../../components/Icon/Icon";
 
 const Highlights = forwardRef(({ exit, active }, ref) => {
     const initialControls = [
         {
             label: 'Assista',
-            cover: '',
+            icon: 'play',
             active: true
         }, {
-            label: 'Veja mais',
-            cover: ''
+            label: 'Veja mais'
         }
     ];
 
@@ -60,13 +60,26 @@ const Highlights = forwardRef(({ exit, active }, ref) => {
                     key={index}
                     active={ control.active }
                     componentActive={ active }
-                >{ control.label }</Control>
+                >
+                    { control.icon &&
+                        <PlayIcon
+                            name={ control.icon }
+                            active={ control.active }
+                            componentActive={ active }
+                        />
+                    }
+
+                    { control.label }
+                </Control>
             )}
         </Controls>
     </Wrapper>;
 });
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  margin-bottom: 50px;
+  padding: 0 40px;
+`;
 
 const Subtitle = styled.h2`
   color: #fff;
@@ -83,8 +96,18 @@ const Control = styled.button`
   border-radius: 3px;
   margin-right: 15px;
   transition: all .3s ease;
-  transform: ${ props => props.active && props.componentActive ? 'scale(1.05)' : 'scale(1)' };
   font-weight: bold;
+`;
+
+const PlayIcon = styled(Icon)`
+  fill: ${ props => props.active && props.componentActive ? '#707070' : '#cacfcd' };
+  height: 15px;
+  margin-right: 5px;
+  width: 15px;
+  transition: fill .2s linear;
+  position: relative;
+  left: -3px;
+  top: 2px;
 `;
 
 export default Highlights;

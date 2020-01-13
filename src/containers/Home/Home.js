@@ -102,13 +102,11 @@ function Home() {
             <Main
                 hideHighlights={ containers.find(container => container.alias === 'highlights').hide }
             >
-                <HighlightsWrapper>
-                    <Highlights
-                        ref={ highlightsRef }
-                        exit={ exit }
-                        active={ containerActive.alias === 'highlights' }
-                    />
-                </HighlightsWrapper>
+                <Highlights
+                    ref={ highlightsRef }
+                    exit={ exit }
+                    active={ containerActive.alias === 'highlights' }
+                />
 
                 <Trails
                     ref={ trailsRef }
@@ -137,9 +135,6 @@ const Aside = styled.aside`
 `;
 
 const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  width: calc(100% - 80px);
   position: relative;
   left: 80px;
   height: 100%;
@@ -147,16 +142,11 @@ const Container = styled.div`
 `;
 
 const Main = styled.main`
-  width: 90%;
   padding: 40px 0;
   display: flex;
   flex-direction: column;
   transform: translateY(${ props => props.hideHighlights ? '-300px' : '0' });
   transition: transform .3s ease;
-`;
-
-const HighlightsWrapper = styled.div`
-  margin-bottom: 50px;
 `;
 
 export default Home;

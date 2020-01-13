@@ -26,7 +26,7 @@ const Trails = forwardRef(({ exit, active, setMainBackground }, ref) => {
     ];
 
     const [trails, setTrail] = useState(initialTrail);
-    const [trailPosition, setTrailPosition] = useState(0);
+    const [trailPosition, setTrailPosition] = useState(40);
 
     useImperativeHandle(ref, () => ({
         handlerKeyPressed,
@@ -105,13 +105,15 @@ const Trails = forwardRef(({ exit, active, setMainBackground }, ref) => {
     );
 });
 
-const Wrapper = styled.div``;
-
-const Top = styled.div``;
-
-const Bottom = styled.div`
-  overflow: hidden;
+const Wrapper = styled.div`
+  padding-top: 50px;
 `;
+
+const Top = styled.div`
+  padding: 0 40px;
+`;
+
+const Bottom = styled.div``;
 
 const Title = styled.h3`
   color: #fff;
@@ -131,7 +133,7 @@ const TrailTitle = styled.h5`
   font-size: 16px;
   color: #fff;
   margin: 0 0 25px 0;
-  padding: 0;
+  padding: 0 40px;
 `;
 
 const Trail = styled.ul`
@@ -141,7 +143,7 @@ const Trail = styled.ul`
   margin: 0;
   padding: 0;
   transform: translateX(${ props => props.position }px);
-  transition: all .3s ease;
+  transition: all .5s ease;
 `;
 
 const Frame = styled.div`
@@ -152,6 +154,7 @@ const Frame = styled.div`
   z-index: 1;
   background: url(${ props => props.active ? 'https://maquinadeaprovacao.com.br/wp-content/uploads/2018/09/play-icon-300x300.png' : 'none' }) center center no-repeat;
   background-size: 50px;
+  left: 40px;
 `;
 
 const Item = styled.li`

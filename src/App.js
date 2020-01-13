@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import Home from "./containers/Home/Home";
-import GlobalStyle from './GlobalStyle';
+import GlobalStyle from './components/GlobalStyle/GlobalStyle';
 import Svgs from './components/Svg/Svg';
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
 
 const Wrapper = styled.div`
   width: 100%;
+  overflow: hidden;
   height: 100%;
   position: absolute;
 `;
